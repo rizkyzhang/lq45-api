@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("./db");
 
+const stockList = require("./data/stockList");
+
 router.get("/", (req, res) => {
   const url = `${req.protocol}://${req.hostname}${
     req.hostname == "localhost" ? `:${process.env.PORT || 3001}` : ""
@@ -34,6 +36,15 @@ router.get("/", (req, res) => {
         endpoint: `${url}/api/:stock/:specificData`,
         examples: [`${url}/api/BBCA/open`, `${url}/api/BBNI/adjusted_close`],
       },
+    },
+  });
+});
+
+router.get("/stocklist", (req, res) => {
+  res.json({
+    status: 200,
+    data: {
+      stockList,
     },
   });
 });

@@ -1,1 +1,1 @@
-web: doppler run -- node .
+web: npm run start:prod

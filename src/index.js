@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 
 const api = require("./api");
+const { notFound, errorHandler } = require("./middleware");
 
 app.use(express.json());
 app.use(cors());
@@ -22,6 +23,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", api);
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(3001, () => {
   console.log("Server running on port 3001");

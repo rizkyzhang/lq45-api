@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("./db");
 
+const stockList = require("./data/stockList");
+
 router.get("/", (req, res) => {
   const url = `${req.protocol}://${req.hostname}${
     req.hostname == "localhost" ? `:${process.env.PORT || 3001}` : ""
@@ -36,6 +38,47 @@ router.get("/", (req, res) => {
       },
     },
   });
+});
+
+router.get("/stocklist", (req, res) => {
+  res.json({
+    status: 200,
+    data: {
+      stockList,
+    },
+  });
+});
+
+router.get("/:stock", (req, res) => {
+  const stock = req.params.stock.toUpperCase();
+
+  db.query(`SELECT * FROM ${stock}`, (error, result) => {
+    res.json({
+      status: 200,
+      data: {
+        stock,
+        historicalData: result,
+      },
+    });
+  });
+});
+
+router.get("/:stock/:specificData", (req, res) => {
+  const stock = req.params.stock.toUpperCase();
+  const specificData = req.params.specificData.toLowerCase();
+
+  db.query(
+    `SELECT id, date, ${specificData} FROM ${stock}`,
+    (error, result) => {
+      res.json({
+        status: 200,
+        data: {
+          stock,
+          historicalData: result,
+        },
+      });
+    }
+  );
 });
 
 module.exports = router;

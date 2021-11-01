@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
-const api = require("./api");
 
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+
+const api = require("./api");
 
 app.use(express.json());
 app.use(cors());

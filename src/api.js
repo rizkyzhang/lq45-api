@@ -63,4 +63,22 @@ router.get("/:stock", (req, res) => {
   });
 });
 
+router.get("/:stock/:specificData", (req, res) => {
+  const stock = req.params.stock.toUpperCase();
+  const specificData = req.params.specificData.toLowerCase();
+
+  db.query(
+    `SELECT id, date, ${specificData} FROM ${stock}`,
+    (error, result) => {
+      res.json({
+        status: 200,
+        data: {
+          stock,
+          historicalData: result,
+        },
+      });
+    }
+  );
+});
+
 module.exports = router;

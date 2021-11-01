@@ -42,41 +42,49 @@ router.get("/", (req, res) => {
 
 router.get("/stocklist", (req, res) => {
   res.json({
-    status: 200,
+    statusCode: 200,
     data: {
       stockList,
     },
   });
 });
 
-router.get("/:stock", (req, res) => {
+router.get("/:stock", (req, res, next) => {
   const stock = req.params.stock.toUpperCase();
 
   db.query(`SELECT * FROM ${stock}`, (error, result) => {
-    res.json({
-      status: 200,
-      data: {
-        stock,
-        historicalData: result,
-      },
-    });
+    if (error) {
+      next(error);
+    } else {
+      res.json({
+        statusCode: 200,
+        data: {
+          stock,
+          historicalData: result,
+        },
+      });
+    }
   });
 });
 
-router.get("/:stock/:specificData", (req, res) => {
+router.get("/:stock/:specificData", (req, res, next) => {
   const stock = req.params.stock.toUpperCase();
   const specificData = req.params.specificData.toLowerCase();
 
   db.query(
     `SELECT id, date, ${specificData} FROM ${stock}`,
     (error, result) => {
-      res.json({
-        status: 200,
-        data: {
-          stock,
-          historicalData: result,
-        },
-      });
+      if (error) {
+        next(error);
+      } else {
+        res.json({
+          statusCode: 200,
+          data: {
+            stock,
+            historicalData: result,
+          },
+        });
+      }
     }
   );
 });

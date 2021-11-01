@@ -38,4 +38,18 @@ router.get("/", (req, res) => {
   });
 });
 
+router.get("/:stock", (req, res) => {
+  const stock = req.params.stock.toUpperCase();
+
+  db.query(`SELECT * FROM ${stock}`, (error, result) => {
+    res.json({
+      status: 200,
+      data: {
+        stock,
+        historicalData: result,
+      },
+    });
+  });
+});
+
 module.exports = router;

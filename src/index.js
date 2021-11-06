@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const port = process.env.PORT || 3001;
 
 const cors = require("cors");
 const helmet = require("helmet");
@@ -26,6 +27,6 @@ app.use("/api", api);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(3001, () => {
-  console.log("Server running on port 3001");
+app.listen(port, () => {
+  console.log("Server running on port " + port);
 });

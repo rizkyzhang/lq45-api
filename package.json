@@ -13,7 +13,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "doppler run -- nodemon ."
+    "start:dev": "doppler run -- nodemon .",
+    "start:prod": "node ."
   },
   "keywords": [],
   "author": "",

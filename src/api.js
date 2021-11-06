@@ -51,29 +51,30 @@ router.get("/stocklist", (req, res) => {
 
 router.get("/:stock", (req, res, next) => {
   const stock = req.params.stock.toUpperCase();
+  const start = req.query.start;
+  const end = req.query.end;
 
-  db.query(`SELECT * FROM ${stock}`, (error, result) => {
-    if (error) {
-      next(error);
-    } else {
-      res.json({
-        statusCode: 200,
-        data: {
-          stock,
-          historicalData: result,
-        },
-      });
-    }
-  });
-});
-
-router.get("/:stock/:specificData", (req, res, next) => {
-  const stock = req.params.stock.toUpperCase();
-  const specificData = req.params.specificData.toLowerCase();
-
-  db.query(
-    `SELECT id, date, ${specificData} FROM ${stock}`,
-    (error, result) => {
+  if (start && end) {
+    db.query(
+      `SELECT * FROM ${stock} WHERE date BETWEEN '${start}' AND '${end}'`,
+      (error, result) => {
+        if (error) {
+          next(error);
+        } else {
+          res.json({
+            statusCode: 200,
+            data: {
+              stock,
+              start,
+              end,
+              historicalData: result,
+            },
+          });
+        }
+      }
+    );
+  } else {
+    db.query(`SELECT * FROM ${stock}`, (error, result) => {
       if (error) {
         next(error);
       } else {
@@ -85,8 +86,54 @@ router.get("/:stock/:specificData", (req, res, next) => {
           },
         });
       }
-    }
-  );
+    });
+  }
+});
+
+router.get("/:stock/:specificData", (req, res, next) => {
+  const stock = req.params.stock.toUpperCase();
+  const specificData = req.params.specificData.toLowerCase();
+  const start = req.query.start;
+  const end = req.query.end;
+
+  if (start && end) {
+    db.query(
+      `SELECT id, date, ${specificData} FROM ${stock} WHERE date BETWEEN '${start}' AND '${end}'`,
+      (error, result) => {
+        if (error) {
+          next(error);
+        } else {
+          res.json({
+            statusCode: 200,
+
+            data: {
+              stock,
+              start,
+              end,
+              historicalData: result,
+            },
+          });
+        }
+      }
+    );
+  } else {
+    db.query(
+      `SELECT id, date, ${specificData} FROM ${stock}`,
+      (error, result) => {
+        if (error) {
+          next(error);
+        } else {
+          res.json({
+            statusCode: 200,
+            data: {
+              stock,
+              historicalData: result,
+            },
+          });
+        }
+      }
+    );
+  }
 });
 
 module.exports = router;

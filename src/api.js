@@ -37,6 +37,13 @@ router.get("/", (req, res) => {
         examples: [`${url}/api/BBCA/open`, `${url}/api/BBNI/adjusted_close`],
       },
     },
+    queryParams: {
+      startEnd: {
+        description: "Historical data between start date and end date",
+        format: "YYYY-MM-DD",
+        example: `${url}/api/BBCA?start=2021-10-24&end=2021-10-31`,
+      },
+    },
   });
 });
 
